@@ -1,2 +1,2 @@
-const client = require('./src/client')
-module.exports = client
+const client = require('./src/client');
+module.exports = client;

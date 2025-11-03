@@ -2,30 +2,28 @@ const Bacon = require('baconjs')
 const RawSdcpClient = require('./raw-client')
 const { commands, actions, aspectRatio, powerStatus, memoryLens } = require('./commands')
 
-function SdcpClient(config = {}) {
-	const rawClient = RawSdcpClient(config)
+const SdcpClient = (config = {}) => {
+	const rawClient = RawSdcpClient(config);
 
-	const api = {
+	return {
 		setPower: (powerOn) => {
 			return rawClient.setAction(commands.SET_POWER, powerOn ? powerStatus.START_UP : powerStatus.STANDBY)
-				.flatMap(() => {
-					return rawClient.getAction(commands.GET_STATUS_POWER)
-						.flatMap(result => Bacon.once(convertPowerStatusToString(result)))
-				})
-				.firstToPromise()
+				.flatMap(() => rawClient.getAction(commands.GET_STATUS_POWER)
+					.flatMap(result => Bacon.once(convertPowerStatusToString(result)))
+				)
+				.firstToPromise();
 		},
 		getPower: () => {
 			return rawClient.getAction(commands.GET_STATUS_POWER)
 				.flatMap(result => Bacon.once(convertPowerStatusToString(result)))
-				.firstToPromise()
+				.firstToPromise();
 		},
 		setAspectRatio: (ratio) => {
 			return rawClient.setAction(commands.ASPECT_RATIO, ratio)
-				.flatMap(() => {
-					return rawClient.getAction(commands.ASPECT_RATIO)
+				.flatMap(() => rawClient.getAction(commands.ASPECT_RATIO)
 						.flatMap(result => Bacon.once(convertAspectRatioToString(result)))
-				})
-				.firstToPromise()
+				)
+				.firstToPromise();
 		},
 		setMemoryLensCommand: (command) => {
 			const cmd = memoryLens[command];
@@ -40,43 +38,42 @@ function SdcpClient(config = {}) {
 		getAspectRatio: () => {
 			return rawClient.getAction(commands.ASPECT_RATIO)
 				.flatMap(result => Bacon.once(convertAspectRatioToString(result)))
-				.firstToPromise()
+				.firstToPromise();
 		},
 		getAction: (command, data) => {
-			return rawClient.getAction(command, data).firstToPromise()
+			return rawClient.getAction(command, data).firstToPromise();
 		},
 		setAction: (command, data) => {
-			return rawClient.setAction(command, data).firstToPromise()
+			return rawClient.setAction(command, data).firstToPromise();
 		}
-	}
-	return api
+	};
 }
 
-function convertPowerStatusToString(result) {
+const convertPowerStatusToString = (result) => {
 	switch (result.data) {
 		case powerStatus.STANDBY:
-			return 'OFF'
+			return 'OFF';
 		case powerStatus.START_UP:
 		case powerStatus.START_UP_LAMP:
-			return 'WARMING'
+			return 'WARMING';
 		case powerStatus.POWER_ON:
-			return 'ON'
+			return 'ON';
 		case powerStatus.COOLING:
 		case powerStatus.COOLING2:
-			return 'COOLING'
+			return 'COOLING';
 		default:
-			return new Bacon.Error(`Unknown power status ${result.data} (${result.raw.toString('hex').toUpperCase()})`)
+			return new Bacon.Error(`Unknown power status ${result.data} (${result.raw.toString('hex').toUpperCase()})`);
 	}
 }
 
-function convertAspectRatioToString(result) {
+const convertAspectRatioToString = (result) => {
 	const keys = Object.keys(aspectRatio)
-	for (let i=0; i<keys.length; i++) {
+	for (let i = 0; i < keys.length; i++) {
 		if (aspectRatio[keys[i]] === result.data) {
-			return keys[i]
+			return keys[i];
 		}
 	}
-	return new Bacon.Error(`Unknown aspect ratio ${result.data} (${result.raw.toString('hex').toUpperCase()})`)
+	return new Bacon.Error(`Unknown aspect ratio ${result.data} (${result.raw.toString('hex').toUpperCase()})`);
 }
 
 module.exports = {
