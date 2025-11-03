@@ -1,6 +1,6 @@
 const Bacon = require('baconjs')
 const RawSdcpClient = require('./raw-client')
-const {commands, actions, aspectRatio, powerStatus, memorylens} = require('./commands')
+const { commands, actions, aspectRatio, powerStatus, memoryLens } = require('./commands')
 
 function SdcpClient(config = {}) {
 	const rawClient = RawSdcpClient(config)
@@ -28,14 +28,14 @@ function SdcpClient(config = {}) {
 				.firstToPromise()
 		},
 		setMemoryLensCommand: (command) => {
-		      const cmd = memorylens[command];
-		      if (!cmd) {
-		        return Bacon.Error(`Unknown memory lens command: ${command}`)
-		      }
-		      return rawClient.setAction(commands.LENS_MEMORY, cmd).firstToPromise()
-		    },
-		    getMemoryLensCommand: () => {
-		      return rawClient.getAction(commands.LENS_MEMORY).firstToPromise()
+			const cmd = memoryLens[command];
+			if (!cmd) {
+				return Bacon.Error(`Unknown memory lens command: ${command}`);
+			}
+			return rawClient.setAction(commands.LENS_MEMORY, cmd).firstToPromise();
+		},
+		getMemoryLensCommand: () => {
+			return rawClient.getAction(commands.LENS_MEMORY).firstToPromise();
 		},
 		getAspectRatio: () => {
 			return rawClient.getAction(commands.ASPECT_RATIO)
