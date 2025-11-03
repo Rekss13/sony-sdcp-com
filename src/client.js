@@ -1,6 +1,6 @@
 const Bacon = require('baconjs')
 const RawSdcpClient = require('./raw-client')
-const {commands, actions, aspectRatio, powerStatus, lensmemory} = require('./commands')
+const {commands, actions, aspectRatio, powerStatus, memorylens} = require('./commands')
 
 function SdcpClient(config = {}) {
 	const rawClient = RawSdcpClient(config)
@@ -28,7 +28,7 @@ function SdcpClient(config = {}) {
 				.firstToPromise()
 		},
 		setMemoryLensCommand: (command) => {
-		      const cmd = memorylens[command]
+		      const cmd = memorylens[command];
 		      if (!cmd) {
 		        return Bacon.Error(`Unknown memory lens command: ${command}`)
 		      }
