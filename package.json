@@ -1,6 +1,6 @@
 {
   "name": "sony-sdcp-com",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "index.js",
   "license": "MIT",
   "author": {
@@ -17,9 +17,9 @@
     "baconjs": "0.7.89"
   },
   "devDependencies": {
-    "mocha": "3.2.0"
+    "mocha": "10.8.2"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">= 14.0.0"
   }
 }
