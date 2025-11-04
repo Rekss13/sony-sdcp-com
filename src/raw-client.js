@@ -52,7 +52,12 @@ const RawSdcpClient = (config = {}) => {
 			error: success !== '01',
 			raw: value
 		}
-		return Bacon.once(result.error ? new Bacon.Error(result) : result);
+		if (!result.error) {
+			return Bacon.once(result);
+		} else if (result.error && result.data == '0180') {
+			return Bacon.once(new Bacon.Error(`Reading data is not supported on this model.`));
+		}
+		return Bacon.once(new Bacon.Error(result));
 	}
 
 	const processActionQueue = ({ msg, id }) => {

@@ -66,6 +66,5 @@ module.exports = {
     actions,
     aspectRatio,
     powerStatus,
-    memoryLens,
-    inputs
+    memoryLens
 }

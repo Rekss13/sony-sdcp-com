@@ -21,23 +21,25 @@ const SdcpClient = (config = {}) => {
 		setAspectRatio: (ratio) => {
 			return rawClient.setAction(commands.ASPECT_RATIO, ratio)
 				.flatMap(() => rawClient.getAction(commands.ASPECT_RATIO)
-						.flatMap(result => Bacon.once(convertAspectRatioToString(result)))
+					.flatMap(result => Bacon.once(convertAspectRatioToString(result)))
 				)
 				.firstToPromise();
-		},
-		setMemoryLensCommand: (command) => {
-			const cmd = memoryLens[command];
-			if (!cmd) {
-				return Bacon.Error(`Unknown memory lens command: ${command}`);
-			}
-			return rawClient.setAction(commands.LENS_MEMORY, cmd).firstToPromise();
-		},
-		getMemoryLensCommand: () => {
-			return rawClient.getAction(commands.LENS_MEMORY).firstToPromise();
 		},
 		getAspectRatio: () => {
 			return rawClient.getAction(commands.ASPECT_RATIO)
 				.flatMap(result => Bacon.once(convertAspectRatioToString(result)))
+				.firstToPromise();
+		},
+		setMemoryLens: (command) => {
+			return rawClient.setAction(commands.LENS_MEMORY, command)
+				.flatMap(() => rawClient.getAction(commands.LENS_MEMORY)
+					.flatMap(result => Bacon.once(convertMemoryLensToString(result)))
+				)
+				.firstToPromise();
+		},
+		getMemoryLens: () => {
+			return rawClient.getAction(commands.LENS_MEMORY)
+				.flatMap(result => Bacon.once(convertMemoryLensToString(result)))
 				.firstToPromise();
 		},
 		getAction: (command, data) => {
@@ -66,14 +68,19 @@ const convertPowerStatusToString = (result) => {
 	}
 }
 
+const convertValueToKey = (object = {}, name, result) => {
+	const key = Object.keys(object).find(k => object[k] == result.data);
+	if (typeof key == 'string')
+		return key;
+	return new Bacon.Error(`Unknown ${name} ${result.data} (${result.raw.toString('hex').toUpperCase()})`);
+}
+
 const convertAspectRatioToString = (result) => {
-	const keys = Object.keys(aspectRatio)
-	for (let i = 0; i < keys.length; i++) {
-		if (aspectRatio[keys[i]] === result.data) {
-			return keys[i];
-		}
-	}
-	return new Bacon.Error(`Unknown aspect ratio ${result.data} (${result.raw.toString('hex').toUpperCase()})`);
+	return convertValueToKey(aspectRatio, 'aspect ratio', result);
+}
+
+const convertMemoryLensToString = (result) => {
+	return convertValueToKey(memoryLens, 'memory lens', result);
 }
 
 module.exports = {
@@ -81,5 +88,6 @@ module.exports = {
 	commands,
 	actions,
 	aspectRatio,
-	powerStatus
+	powerStatus,
+	memoryLens
 }
