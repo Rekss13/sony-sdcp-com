@@ -29,18 +29,18 @@ const commands = {
 }
 
 const memoryLens = {
-    ShiftUp: '1772',
-    ShiftDown: '1773',
-    FocusFar: '1774',
-    FocusNear: '1775',
-    ZoomLarge: '1777',
-    ZoomSmall: '1778',
-    CursorRight: '1733',
-    CursorLeft: '1734',
-    CursorUp: '1735',
-    CursorDown: '1736',
-    Enter: '175A',
-    Menu: '1729'
+    SHIFT_UP: '1772',
+    SHIFT_DOWN: '1773',
+    FOCUS_FAR: '1774',
+    FOCUS_NEAR: '1775',
+    ZOOM_LARGE: '1777',
+    ZOOM_SMALL: '1778',
+    CURSOR_RIGHT: '1733',
+    CURSOR_LEFT: '1734',
+    CURSOR_UP: '1735',
+    CURSOR_DOWN: '1736',
+    ENTER: '175A',
+    MENU: '1729'
 }
 
 const inputs = {

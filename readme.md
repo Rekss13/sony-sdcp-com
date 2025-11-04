@@ -13,6 +13,7 @@ Supported Sony projectors should include:
 * VPL-VW328
 * VPL-VW365
 * VPL-VW260
+* VPL-XW5000ES (not supported get aspect ratio and get memory lens)
 
 Usage
 =====
@@ -59,6 +60,14 @@ API
 `client.getAspectRatio()` Returns Promise containing current aspect ratio setting [`NORMAL`, `V_STRETCH`, `ZOOM_1_85`, `ZOOM_2_35`, `STRETCH`, `SQUEEZE`].
 
 `client.setAspectRatio(<string> ratio)` Set new aspect ratio from `aspectRatio`-enum. Returns Promise containing aspect ratio setting after action.
+
+`client.getMemoryLens()` Returns Promise containing current memory lens setting [`SHIFT_UP`, `SHIFT_DOWN`, `FOCUS_FAR`,  `FOCUS_NEAR`, `ZOOM_LARGE`, `ZOOM_SMALL`, `CURSOR_RIGHT`, `CURSOR_LEFT`, `CURSOR_UP`, `CURSOR_DOWN`, `ENTER`, `MENU`].
+
+`client.setMemoryLens(<string> command)` Sets the memory lens to a value from `memoryLens`-enum. Returns Promise containing memory lens setting after action.
+
+`client.getInput()` Returns Promise containing current input setting [`HDMI1`, `HDMI2`].
+
+`client.setInput(<string> input)` Set new input from `inputs`-enum. Returns Promise containing inputs setting after action.
 
 `client.getAction(<string> command, <string> data)` Perform a `GET` request with `command` and optional `data`. See [commands.js](src/commands.js) for reference.
 Returns Promise of object containing raw response data as fields `version`, `category`, `community`, `command`, `dataLength`, `data`,
