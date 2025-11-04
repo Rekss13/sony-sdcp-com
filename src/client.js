@@ -1,6 +1,6 @@
 const Bacon = require('baconjs')
 const RawSdcpClient = require('./raw-client')
-const { commands, actions, aspectRatio, powerStatus, memoryLens } = require('./commands')
+const { commands, actions, aspectRatio, powerStatus, memoryLens, inputs } = require('./commands')
 
 const SdcpClient = (config = {}) => {
 	const rawClient = RawSdcpClient(config);
@@ -40,6 +40,18 @@ const SdcpClient = (config = {}) => {
 		getMemoryLens: () => {
 			return rawClient.getAction(commands.LENS_MEMORY)
 				.flatMap(result => Bacon.once(convertMemoryLensToString(result)))
+				.firstToPromise();
+		},
+		setInput: (input) => {
+			return rawClient.setAction(commands.INPUT, input)
+				.flatMap(() => rawClient.getAction(commands.INPUT)
+					.flatMap(result => Bacon.once(convertInputsToString(result)))
+				)
+				.firstToPromise();
+		},
+		getInput: () => {
+			return rawClient.getAction(commands.INPUT)
+				.flatMap(result => Bacon.once(convertInputsToString(result)))
 				.firstToPromise();
 		},
 		getAction: (command, data) => {
@@ -83,11 +95,16 @@ const convertMemoryLensToString = (result) => {
 	return convertValueToKey(memoryLens, 'memory lens', result);
 }
 
+const convertInputsToString = (result) => {
+	return convertValueToKey(inputs, 'input', result);
+}
+
 module.exports = {
 	SdcpClient,
 	commands,
 	actions,
 	aspectRatio,
 	powerStatus,
-	memoryLens
+	memoryLens,
+	inputs
 }

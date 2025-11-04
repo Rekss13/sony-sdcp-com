@@ -43,6 +43,11 @@ const memoryLens = {
     Menu: '1729'
 }
 
+const inputs = {
+    HDMI1: '0002',
+    HDMI2: '0003'
+}
+
 const aspectRatio = {
     NORMAL: '0001',
     V_STRETCH: '000B',
@@ -66,5 +71,6 @@ module.exports = {
     actions,
     aspectRatio,
     powerStatus,
-    memoryLens
+    memoryLens,
+    inputs
 }
